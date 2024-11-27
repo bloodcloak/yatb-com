@@ -101,7 +101,7 @@ module.exports = {
 
 			const logChannel = await interaction.guild.channels.fetch(category.log_channel_id);
 
-			logChannel.send({content: `<@&${category.ping_role_id}>`, embeds: [logEmbed] });
+			logChannel.send({content: `<@&${category.ping_role_id}> new request in <#${channel.id}>`, embeds: [logEmbed] });
 			interaction.reply({ content: `Request created in <#${channel.id}>`, ephemeral: true });
 			return;
 		}
