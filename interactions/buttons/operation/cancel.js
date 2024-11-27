@@ -6,7 +6,7 @@ module.exports = {
     async execute(interaction) {
         const footerSplit = footer.split(" | ")
 
-        if (interaction.user.id !== footerSplit[0] || interaction.user.id !== footerSplit[1]) {
+        if (interaction.user.id !== footerSplit[0] && interaction.user.id !== footerSplit[1]) {
             return interaction.followUp({ content: "You do not have permission to cancel this request.", ephemeral: true });
         }
 
