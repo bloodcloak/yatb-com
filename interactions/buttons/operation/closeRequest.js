@@ -6,12 +6,11 @@ module.exports = {
     async execute(interaction) {
         const channel = interaction.channel;
 
-        if (!channel.name.startsWith("ticket-")) {
-            return interaction.reply({ content: "This is not a ticket channel.", ephemeral: true })
+        if (!channel.name.startsWith("request-")) {
+            return interaction.reply({ content: "This is not a request channel.", ephemeral: true })
         }
 
         let embed = new EmbedBuilder()
-            .setDescription(`${interaction.user} wants to close the ticket.`)
             .setColor("#F1C40F")
 
             const ticket = await db("tickets")
@@ -20,10 +19,12 @@ module.exports = {
             .first();
 
         if (interaction.user.id === ticket.user_id) {
-            embed.setFooter({ text: "Wait for a staff member to close the ticket." })
+            embed.setDescription(`Please confirm you want to close the request.`)
+            embed.setFooter({ text: `${ticket.user_id} | Select an option below.` })
         }
 
         else {
+            embed.setDescription(`${interaction.user} wants to close the request.`)
             embed.setFooter({ text: `${ticket.user_id} | ${interaction.user.id}` })
         }
 
@@ -49,7 +50,7 @@ module.exports = {
 
         await interaction.reply({ embeds: [embed], components: [row] });
         if (interaction.user.id !== ticket.user_id) {
-            await interaction.channel.send({ content: `<@${ticket.user_id}>, Please confirm the closing of this ticket.` })
+            await interaction.channel.send({ content: `<@${ticket.user_id}>, Please confirm the closing of this request.` })
         }
     }
 }

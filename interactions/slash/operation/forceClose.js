@@ -5,15 +5,15 @@ const discordTranscripts = require("discord-html-transcripts");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('force_close')
-        .setDescription('Force close a ticket.'),
+        .setDescription('Force close a request.'),
     async execute(interaction) {
         const channel = interaction.channel;
         const settings = await db("settings")
             .select("*")
             .first();
 
-        if (!channel.name.startsWith("ticket-")) {
-            return interaction.reply({ content: "This is not a ticket channel.", ephemeral: true })
+        if (!channel.name.startsWith("request-")) {
+            return interaction.reply({ content: "This is not a request channel.", ephemeral: true })
         }
 
         const member = interaction.guild.members.cache.get(interaction.user.id);
@@ -21,7 +21,7 @@ module.exports = {
         const hasRole = member.roles.cache.some((role) => settings.roles.includes(role.id));
 
         if (!hasRole) {
-            return interaction.reply({ content: "You don't have permission to force close this ticket.", ephemeral: true });
+            return interaction.reply({ content: "You don't have permission to force close this request.", ephemeral: true });
         }
 
         await interaction.deferReply();
@@ -47,12 +47,12 @@ module.exports = {
         const logChannel = interaction.guild.channels.cache.get(ticket.log_channel_id);
 
         const embed = new EmbedBuilder()
-            .setTitle(`Ticket #${ticket.id} closed`)
+            .setTitle(`Request #${ticket.id} closed`)
             .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
-            .setDescription(`Ticket closed by ${interaction.user}.`)
+            .setDescription(`Request closed by ${interaction.user}.`)
             .addFields(
-                { name: "Ticket type", value: `${category.label}` },
-                { name: "Ticket owner", value: `ID: ${ticket.user_id}` }
+                { name: "Request type", value: `${category.label}` },
+                { name: "Request owner", value: `ID: ${ticket.user_id}` }
             )
             .setColor("Red")
             .setFooter({ text: `Transcript is attached below this message` })
@@ -60,7 +60,7 @@ module.exports = {
         logChannel.send({ embeds: [embed] });
         logChannel.send({ files: [transcript] });
 
-        interaction.followUp({ content: `Closing this ticket in 5 seconds...` });
+        interaction.followUp({ content: `Closing this request in 5 seconds...` });
 
         setTimeout(async () => {
             await channel.delete();

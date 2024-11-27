@@ -40,6 +40,11 @@ module.exports = {
                         .setDescription('Timeout in days.')
                         .setRequired(true)
                 )
+                .addRoleOption(option =>
+                    option.setName('ping_role')
+                        .setDescription('Role to ping at ticket create.')
+                        .setRequired(true)
+                )
                 .addStringOption(option =>
                     option.setName('emoji')
                         .setDescription('Emoji to use for the ticket category.')
@@ -72,6 +77,10 @@ module.exports = {
                 .addStringOption(option =>
                     option.setName('emoji')
                         .setDescription('Emoji to use for the ticket category.')
+                )
+                .addRoleOption(option =>
+                    option.setName('ping_role')
+                        .setDescription('Role to ping at ticket create.')
                 )
         )
         .addSubcommand(subcommand =>
@@ -157,13 +166,15 @@ module.exports = {
             const logChannel = interaction.options.getChannel('log_channel');
             const emoji = interaction.options.getString('emoji');
             const category = interaction.options.getChannel('category');
+            const pingRole = interaction.options.getRole('ping_role');
 
             await db('buttons').insert({
                 label: name,
                 style: color,
                 log_channel_id: logChannel.id,
                 category_id: category.id,
-                emoji: emoji
+                emoji: emoji,
+                ping_role_id: pingRole.id
             });
 
             await interaction.reply({ content: 'Ticket category created!', ephemeral: true });
@@ -175,12 +186,14 @@ module.exports = {
             const logChannel = interaction.options.getChannel('log_channel');
             const emoji = interaction.options.getString('emoji');
             const category = interaction.options.getChannel('category');
+            const pingRole = interaction.options.getRole('ping_role');
 
             const options = {};
             if (color) options.style = color;
             if (logChannel) options.log_channel_id = logChannel.id;
             if (emoji) options.emoji = emoji;
             if (category) options.category_id = category.id;
+            if (pingRole) options.ping_role_id = pingRole.id;
 
             await db('buttons').where({ label: name }).update(options);
 

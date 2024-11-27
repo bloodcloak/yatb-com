@@ -42,7 +42,7 @@ module.exports = {
 			const ticketNumber = lastTicket ? lastTicket.id + 1 : 1;
 
 			const channel = await interaction.guild.channels.create({
-				name: `ticket-${ticketNumber}`,
+				name: `request-${ticketNumber}`,
 				type: ChannelType.GuildText,
 				parent: category.category_id,
 			});
@@ -63,11 +63,12 @@ module.exports = {
 
 			for (const question of questions) {
 				const response = interaction.fields.getTextInputValue(question.number.toString());
-				formattedQuestions.push({ question: question.question, response: response });
+				const escapeEveryone = response.replace((/@(everyone|here)/g, '@\u200B$1'));
+				formattedQuestions.push({ question: question.question, response: escapeEveryone });
 			}
 
 			const ticketEmbed = new EmbedBuilder()
-				.setTitle(`Ticket #${ticketNumber}`)
+				.setTitle(`Request #${ticketNumber}`)
 				.addFields(
 					formattedQuestions.map((question) => ({
 						name: question.question,
@@ -90,18 +91,18 @@ module.exports = {
 			channel.send({ embeds: [ticketEmbed], components: [row] });
 
 			const logEmbed = new EmbedBuilder()
-				.setTitle(`Ticket #${ticketNumber} created`)
-				.setDescription(`Ticket created by ${interaction.user}`)
+				.setTitle(`Request #${ticketNumber} created`)
+				.setDescription(`Request created by ${interaction.user}`)
 				.setColor("Green")
 				.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
 				.addFields(
-					{ name: "Ticket type", value: category.label, inline: true },
+					{ name: "Request type", value: category.label, inline: true },
 				)
 
 			const logChannel = await interaction.guild.channels.fetch(category.log_channel_id);
 
-			logChannel.send({ embeds: [logEmbed] });
-			interaction.reply({ content: `Ticket created in <#${channel.id}>`, ephemeral: true });
+			logChannel.send(`<@${category.ping_role_id}>`, { embeds: [logEmbed] });
+			interaction.reply({ content: `Request created in <#${channel.id}>`, ephemeral: true });
 			return;
 		}
 
