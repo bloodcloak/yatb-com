@@ -23,7 +23,7 @@ module.exports = {
 
         if (interaction.user.id === ticket.user_id) {
             embed.setDescription(`Please confirm you want to close the request.`)
-            embed.setFooter({ text: "Select an option below." })
+            embed.setFooter({ text: `${ticket.user_id} | Select an option below.` })
         }
 
         else {

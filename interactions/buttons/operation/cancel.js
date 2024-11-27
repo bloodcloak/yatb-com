@@ -4,6 +4,12 @@ const db = require("../../../connectDb");
 module.exports = {
     id: "cancel_close",
     async execute(interaction) {
+        const footerSplit = footer.split(" | ")
+
+        if (interaction.user.id !== footerSplit[0] || interaction.user.id !== footerSplit[1]) {
+            return interaction.followUp({ content: "You do not have permission to cancel this request.", ephemeral: true });
+        }
+
         const embed = new EmbedBuilder()
             .setDescription(`Close request cancelled by ${interaction.user}.`)
             .setColor("#B57EDC")
