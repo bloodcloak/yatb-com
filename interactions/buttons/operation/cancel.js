@@ -8,7 +8,7 @@ module.exports = {
         const footerSplit = footer.split(" | ")
 
         if (interaction.user.id !== footerSplit[0] && interaction.user.id !== footerSplit[1]) {
-            return interaction.followUp({ content: "You do not have permission to cancel this request.", ephemeral: true });
+            return interaction.reply({ content: "You do not have permission to cancel this request.", ephemeral: true });
         }
 
         const embed = new EmbedBuilder()
