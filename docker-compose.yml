@@ -11,7 +11,7 @@ services:
       - ./db:/var/lib/postgresql/data:rw
 
   bot:
-    image: ghcr.io/bloodcloak/yatb-com
+    image: ghcr.io/bloodcloak/yatb
     restart: unless-stopped
     depends_on:
       - db
