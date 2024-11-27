@@ -4,6 +4,7 @@ const db = require("../../../connectDb");
 module.exports = {
     id: "cancel_close",
     async execute(interaction) {
+        const footer = interaction.message.embeds[0].footer.text;
         const footerSplit = footer.split(" | ")
 
         if (interaction.user.id !== footerSplit[0] && interaction.user.id !== footerSplit[1]) {
