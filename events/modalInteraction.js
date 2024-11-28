@@ -83,7 +83,7 @@ module.exports = {
 				.addComponents(
 					new ButtonBuilder()
 						.setCustomId("close_request")
-						.setLabel("Close Ticket")
+						.setLabel("Close Request")
 						.setStyle(ButtonStyle.Danger)
 						.setEmoji("✖️")
 				)
