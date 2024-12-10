@@ -16,7 +16,7 @@ module.exports = {
             .first();
 
         if (interaction.user.id !== ticket.user_id) {
-            return interaction.followUp({ content: "You do not have permission to close this request.", ephemeral: true });
+            return interaction.reply({ content: "You do not have permission to close this request.", ephemeral: true });
         }
 
         let embed = new EmbedBuilder()
