@@ -10,23 +10,19 @@ module.exports = {
             return interaction.reply({ content: "This is not a request channel.", ephemeral: true })
         }
 
-        let embed = new EmbedBuilder()
-            .setColor("#F1C40F")
-
-            const ticket = await db("tickets")
+        const ticket = await db("tickets")
             .select("*")
             .where("channel_id", channel.id)
             .first();
 
-        if (interaction.user.id === ticket.user_id) {
-            embed.setDescription(`Please confirm you want to close the request.`)
-            embed.setFooter({ text: `${ticket.user_id} | Select an option below.` })
+        if (interaction.user.id !== ticket.user_id) {
+            return interaction.followUp({ content: "You do not have permission to close this request.", ephemeral: true });
         }
 
-        else {
-            embed.setDescription(`${interaction.user} wants to close the request.`)
-            embed.setFooter({ text: `${ticket.user_id} | ${interaction.user.id}` })
-        }
+        let embed = new EmbedBuilder()
+            .setColor("#F1C40F")
+            .setDescription(`Please confirm you want to close the request.`)
+            .setFooter({ text: `${ticket.user_id} | Select an option below.` });
 
         const row = new ActionRowBuilder()
             .addComponents(
